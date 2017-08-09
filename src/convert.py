@@ -73,11 +73,12 @@ def netforward(param, model, tnet, image):
     return oriImg, multiplier, heatmap, paf
 
 
-def convert(currentFrame, oriImg, multiplier, heatmap, paf, jcolors):
+def convert(currentFrame, oriImg, multiplier, heatmap, paf, jcolors, format='image'):
     import cv2 as cv
     from scipy.ndimage.filters import gaussian_filter
     import numpy as np
     import math
+    import json
 
     thre1 = 0.1
     thre2 = 0.05
@@ -261,7 +262,10 @@ def convert(currentFrame, oriImg, multiplier, heatmap, paf, jcolors):
         # visualize 2
         stickwidth = 4
 
+        body_parts = []
         for i in range(17):
+            parts = {'id': i}
+            subs = []
             for n in range(len(subset)):
                 index = subset[n][np.array(limbSeq[i]) - 1]
                 if -1 in index:
@@ -282,20 +286,32 @@ def convert(currentFrame, oriImg, multiplier, heatmap, paf, jcolors):
                 polygon = cv.ellipse2Poly((int(mY), int(mX)), (int(
                     length / 2), stickwidth), int(angle), 0, 360, 1)
                 cv.fillConvexPoly(cur_canvas, polygon, color)
+                subinfo = {'sub_id': n, 'mX': mX, 'mY': mY, 'length': length, 'angle': angle}
+                subs.append(subinfo)
 
                 #positions[image].append((
                 #    (int(mY), int(mX)),
                 #    int(length / 2),
                 #    int(angle), i))
                 canvas = cv.addWeighted(canvas, 0.4, cur_canvas, 0.6, 0)
+            parts = {'id': i, 'subset': subs}
+            body_parts.append(parts)
 
         #plt.imshow(canvas[:, :, [2, 1, 0]])
         #fig = matplotlib.pyplot.gcf()
         #fig.set_size_inches(12, 12)
-        outputPath = "output-%03d.png" % currentFrame
-        cv.imwrite(outputPath, canvas)
+        info = {'body_parts': body_parts}
+
+        if 'image' == format:
+            outputPath = "output-%03d.png" % currentFrame
+            cv.imwrite(outputPath, canvas)
+
+        elif 'json' == format:
+            outputPath = "output-%03d.json" % currentFrame
+            with open(outputPath, 'w') as outfile:
+                json.dump(info, outfile)
+
         print("saved frame to", outputPath)
-        #currentFrame += 1
 
 
 def config_reader():

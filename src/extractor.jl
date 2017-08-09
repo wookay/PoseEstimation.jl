@@ -25,18 +25,18 @@ function prepare(;gpu=false)::PoseModel
     PoseModel(param, model, net)
 end
 
-function getpose(posem::PoseModel, image::String; currentFrame=1)
+function getpose(posem::PoseModel, image::String; currentFrame=1, format="image")
     const colors = [[255, 0, 0], [255, 85, 0], [255, 170, 0], [255, 255, 0], [170, 255, 0], [85, 255, 0], [0, 255, 0],
           [0, 255, 85], [0, 255, 170], [0, 255, 255], [
               0, 170, 255], [0, 85, 255], [0, 0, 255], [85, 0, 255],
           [170, 0, 255], [255, 0, 255], [255, 0, 170], [255, 0, 85]]
     oriImg, multiplier, heatmap, paf = conv[:netforward](posem.param, posem.model, posem.net, image)
-    conv[:convert](currentFrame, oriImg, multiplier, heatmap, paf, colors)
+    conv[:convert](currentFrame, oriImg, multiplier, heatmap, paf, colors, format)
 end
 
-function getpose(posem::PoseModel, list::Vector)
+function getpose(posem::PoseModel, list::Vector; format="image")
     for (currentFrame, image) in enumerate(list)
-        getpose(posem, image; currentFrame=currentFrame)
+        getpose(posem, image; currentFrame=currentFrame, format=format)
     end
 end
 
