@@ -12,11 +12,17 @@ Modifications from https://github.com/JustinShenk/video-pose-extractor
 ```julia
 using PoseNet
 m = prepare()
-getpose(m, "images/bp.jpg")
-
-using Glob
-getpose(m, glob("headpose/*.jpg"))
+getpose(m, "examples/dr/dr_001.png")
 ```
+
+<img src="examples/dr_output.png" />
+
+```julia
+using Glob
+getpose(m, glob("examples/dr/*"))
+```
+
+<img src="examples/dr_output.gif" />
 
 * use GPU
 ```julia
