@@ -41,7 +41,7 @@ def netforward(param, model, tnet, image):
         oriImg = cv.imread(image)
         #multiplier = [x * boxsize / oriImg.shape[0] for x in scale_search]
         multiplier = [0.5, 1]
-        scale = multiplier[-1]
+        scale = multiplier[0] # -1
         imageToTest = cv.resize(oriImg, (0, 0), fx=scale, fy=scale, interpolation=cv.INTER_CUBIC)
         imageToTest_padded, pad = padRightDownCorner(
             imageToTest, model['stride'], model['padValue'])
@@ -264,7 +264,6 @@ def convert(currentFrame, oriImg, multiplier, heatmap, paf, jcolors, format='ima
 
         body_parts = []
         for i in range(17):
-            parts = {'id': i}
             subs = []
             for n in range(len(subset)):
                 index = subset[n][np.array(limbSeq[i]) - 1]
@@ -286,7 +285,7 @@ def convert(currentFrame, oriImg, multiplier, heatmap, paf, jcolors, format='ima
                 polygon = cv.ellipse2Poly((int(mY), int(mX)), (int(
                     length / 2), stickwidth), int(angle), 0, 360, 1)
                 cv.fillConvexPoly(cur_canvas, polygon, color)
-                subinfo = {'sub_id': n, 'mX': mX, 'mY': mY, 'length': length, 'angle': angle}
+                subinfo = {'sub_id': n, 'X': list(X), 'Y': list(Y), 'mX': mX, 'mY': mY, 'length': length, 'angle': angle}
                 subs.append(subinfo)
 
                 #positions[image].append((
@@ -294,7 +293,7 @@ def convert(currentFrame, oriImg, multiplier, heatmap, paf, jcolors, format='ima
                 #    int(length / 2),
                 #    int(angle), i))
                 canvas = cv.addWeighted(canvas, 0.4, cur_canvas, 0.6, 0)
-            parts = {'id': i, 'subset': subs}
+            parts = {'id': i+1, 'subset': subs}
             body_parts.append(parts)
 
         #plt.imshow(canvas[:, :, [2, 1, 0]])
