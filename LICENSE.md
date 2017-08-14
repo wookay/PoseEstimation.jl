@@ -1,4 +1,4 @@
-The PoseNet.jl package is licensed under the MIT "Expat" License:
+The PoseEstimation.jl package is licensed under the MIT "Expat" License:
 
 > Copyright (c) 2017: WooKyoung Noh.
 > 
@@ -19,4 +19,7 @@ The PoseNet.jl package is licensed under the MIT "Expat" License:
 > LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 > OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 > SOFTWARE.
-> 
+
+
+* Realtime_Multi-Person_Pose_Estimation/LICENSE
+- https://github.com/ZheC/Realtime_Multi-Person_Pose_Estimation/blob/master/LICENSE

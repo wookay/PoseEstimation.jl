@@ -1,6 +1,6 @@
 #__precompile__()
 
-module PoseNet
+module PoseEstimation
 
 # package code goes here
 include("extractor.jl")

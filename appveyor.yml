@@ -41,7 +41,7 @@ build_script:
 # Need to convert from shallow to complete for Pkg.clone to work
   - IF EXIST .git\shallow (git fetch --unshallow)
   - C:\projects\julia\bin\julia -e "versioninfo();
-      Pkg.clone(pwd(), \"PoseNet\"); Pkg.build(\"PoseNet\")"
+      Pkg.clone(pwd(), \"PoseEstimation\"); Pkg.build(\"PoseEstimation\")"
 
 test_script:
-  - C:\projects\julia\bin\julia -e "Pkg.test(\"PoseNet\")"
+  - C:\projects\julia\bin\julia -e "Pkg.test(\"PoseEstimation\")"

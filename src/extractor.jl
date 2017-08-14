@@ -39,16 +39,3 @@ function getpose(posem::PoseModel, list::Vector; format="image")
         getpose(posem, image; currentFrame=currentFrame, format=format)
     end
 end
-
-
-
-#=
-
-using PoseNet
-m = prepare()
-getpose(m, "images/bp.jpg")
-
-using Glob
-# getpose(m, glob("headpose/*"))
-
-=#

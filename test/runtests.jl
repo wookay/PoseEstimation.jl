@@ -1,4 +1,4 @@
-using PoseNet
+using PoseEstimation
 using Base.Test
 
 # write your own tests here

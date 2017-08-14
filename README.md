@@ -1,6 +1,7 @@
-# PoseNet
+# PoseEstimation
 
-Modifications from https://github.com/JustinShenk/video-pose-extractor
+- From Zhe Cao's Demo: https://github.com/ZheC/Realtime_Multi-Person_Pose_Estimation/tree/master/testing/python
+- Modifications from https://github.com/JustinShenk/video-pose-extractor
 
 
 ### Requirements
@@ -10,7 +11,7 @@ Modifications from https://github.com/JustinShenk/video-pose-extractor
 
 ### Run
 ```julia
-using PoseNet
+using PoseEstimation
 m = prepare()
 getpose(m, "examples/dr/dr_001.png")
 ```

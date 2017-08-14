@@ -192,7 +192,7 @@ def convert(currentFrame, oriImg, multiplier, heatmap, paf, jcolors, format='ima
 
         # last number in each row is the total parts number of that person
         # the second last number in each row is the score of the overall
-        # configuration
+        #s configuration
         subset = -1 * np.ones((0, 20))
         candidate = np.array(
             [item for sublist in all_peaks for item in sublist])
@@ -257,7 +257,7 @@ def convert(currentFrame, oriImg, multiplier, heatmap, paf, jcolors, format='ima
         #              0, 170, 255], [0, 85, 255], [0, 0, 255], [85, 0, 255],
         #          [170, 0, 255], [255, 0, 255], [255, 0, 170], [255, 0, 85]]
 
-        canvas = oriImg # cv.imread(image)
+        canvas = oriImg
 
         # visualize 2
         stickwidth = 4
@@ -265,8 +265,10 @@ def convert(currentFrame, oriImg, multiplier, heatmap, paf, jcolors, format='ima
         body_parts = []
         for i in range(17):
             subs = []
+            limb = np.array(limbSeq[i]) - 1
+
             for n in range(len(subset)):
-                index = subset[n][np.array(limbSeq[i]) - 1]
+                index = subset[n][limb]
                 if -1 in index:
                     continue
                 cur_canvas = canvas.copy()
@@ -278,27 +280,17 @@ def convert(currentFrame, oriImg, multiplier, heatmap, paf, jcolors, format='ima
                 angle = math.degrees(math.atan2(X[0] - X[1], Y[0] - Y[1]))
 
                 color = jcolors[i].tolist()
-                #polygon = cv.ellipse2Poly((int(mY), int(mX)), (int(
-                #    length / 2), stickwidth), int(angle), 0, 360, 1)
-                #cv.polylines(cur_canvas, polygon, True, colors[i]) 
-
                 polygon = cv.ellipse2Poly((int(mY), int(mX)), (int(
                     length / 2), stickwidth), int(angle), 0, 360, 1)
                 cv.fillConvexPoly(cur_canvas, polygon, color)
-                subinfo = {'sub_id': n, 'X': list(X), 'Y': list(Y), 'mX': mX, 'mY': mY, 'length': length, 'angle': angle}
-                subs.append(subinfo)
 
-                #positions[image].append((
-                #    (int(mY), int(mX)),
-                #    int(length / 2),
-                #    int(angle), i))
+                subinfo = {'subset_id': int(n), 'X': list(X), 'Y': list(Y), 'mX': mX, 'mY': mY, 'length': length, 'angle': angle}
+                subs.append(subinfo)
                 canvas = cv.addWeighted(canvas, 0.4, cur_canvas, 0.6, 0)
-            parts = {'id': i+1, 'subset': subs}
+
+            parts = {'id': i, 'limb': [int(limb[0]),int(limb[1])], 'subset': subs}
             body_parts.append(parts)
 
-        #plt.imshow(canvas[:, :, [2, 1, 0]])
-        #fig = matplotlib.pyplot.gcf()
-        #fig.set_size_inches(12, 12)
         info = {'body_parts': body_parts}
 
         if 'image' == format:
