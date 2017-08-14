@@ -252,10 +252,9 @@ def convert(currentFrame, oriImg, multiplier, heatmap, paf, jcolors, format='ima
         subset = np.delete(subset, deleteIdx, axis=0)
 
         # visualize
-        #colors = [[255, 0, 0], [255, 85, 0], [255, 170, 0], [255, 255, 0], [170, 255, 0], [85, 255, 0], [0, 255, 0],
-        #          [0, 255, 85], [0, 255, 170], [0, 255, 255], [
-        #              0, 170, 255], [0, 85, 255], [0, 0, 255], [85, 0, 255],
-        #          [170, 0, 255], [255, 0, 255], [255, 0, 170], [255, 0, 85]]
+        # colors = [[255, 0, 0], [255, 85, 0], [255, 170, 0], [255, 255, 0], [170, 255, 0], [85, 255, 0], [0, 255, 0],
+        #           [0, 255, 85], [0, 255, 170], [0, 255, 255], [0, 170, 255], [0, 85, 255], [0, 0, 255], [85, 0, 255],
+        #           [170, 0, 255], [255, 0, 255], [255, 0, 170], [255, 0, 85]]
 
         canvas = oriImg
 
@@ -266,6 +265,8 @@ def convert(currentFrame, oriImg, multiplier, heatmap, paf, jcolors, format='ima
         for i in range(17):
             subs = []
             limb = np.array(limbSeq[i]) - 1
+            # color = colors[i]
+            color = jcolors[i].tolist()
 
             for n in range(len(subset)):
                 index = subset[n][limb]
@@ -279,19 +280,20 @@ def convert(currentFrame, oriImg, multiplier, heatmap, paf, jcolors, format='ima
                 length = ((X[0] - X[1]) ** 2 + (Y[0] - Y[1]) ** 2) ** 0.5
                 angle = math.degrees(math.atan2(X[0] - X[1], Y[0] - Y[1]))
 
-                color = jcolors[i].tolist()
                 polygon = cv.ellipse2Poly((int(mY), int(mX)), (int(
                     length / 2), stickwidth), int(angle), 0, 360, 1)
-                cv.fillConvexPoly(cur_canvas, polygon, color)
+                cv.fillConvexPoly(cur_canvas, polygon, color[::-1])
 
                 subinfo = {'subset_id': int(n), 'X': list(X), 'Y': list(Y), 'mX': mX, 'mY': mY, 'length': length, 'angle': angle}
                 subs.append(subinfo)
                 canvas = cv.addWeighted(canvas, 0.4, cur_canvas, 0.6, 0)
 
-            parts = {'id': i, 'limb': [int(limb[0]),int(limb[1])], 'subset': subs}
+            parts = {'id': i, 'limb': [int(limb[0]),int(limb[1])], 'color': color, 'subset': subs}
             body_parts.append(parts)
 
-        info = {'body_parts': body_parts}
+        h = oriImg.shape[0]
+        w = oriImg.shape[1]
+        info = {'body_parts': body_parts, 'width': w, 'height': h}
 
         if 'image' == format:
             outputPath = "output-%03d.png" % currentFrame
